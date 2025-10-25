@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import arqobj.aps3.Cartao.dto.*;
 
 
 @Service
@@ -12,16 +13,18 @@ public class CartaoService {
   @Autowired
   private CartaoRepository cartaoRepository;
 
-  public Cartao criarCartao(Cartao cartao) {
-    return cartaoRepository.save(cartao);
+  public CreatedCartaoDTO criarCartao(Cartao cartao) {
+    Cartao cartaoCriado = cartaoRepository.save(cartao);
+
+    return CreatedCartaoDTO.toDto(cartaoCriado);
   }
 
-  public List<Cartao> getCartoes() {
-    return cartaoRepository.findAll();
+  public List<ResponseCartaoDTO> getCartoes() {
+    return cartaoRepository.findAll().stream().map(cartao -> ResponseCartaoDTO.toDto(cartao)).toList();
   }
 
-  public List<Cartao> getCartoesByNumeroConta(Integer numeroConta) {
-    return cartaoRepository.findByContaCorrente_Numero(numeroConta);
+  public List<ResponseCartaoDTO> getCartoesByNumeroConta(Integer numeroConta) {
+    return cartaoRepository.findByContaCorrente_Numero(numeroConta).stream().map(cartao -> ResponseCartaoDTO.toDto(cartao)).toList();
   }
 
   public Cartao cancelarCartao(Integer numeroCartao) {

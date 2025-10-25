@@ -5,6 +5,8 @@ import java.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import arqobj.aps3.Cliente.dto.ResponseClienteDTO;
+
 @Service
 public class ClienteService {
 
@@ -12,20 +14,21 @@ public class ClienteService {
   private ClienteRepository clienteRepository;
 
 
-  public Cliente criarCliente(Cliente cliente) {
-    return clienteRepository.save(cliente);
+  public ResponseClienteDTO criarCliente(Cliente cliente) {
+    Cliente clienteCriado =  clienteRepository.save(cliente);
+    return ResponseClienteDTO.toDto(clienteCriado);
 
   }
 
-  public List<Cliente> getClientes() {
-    return clienteRepository.findAll(); 
+  public List<ResponseClienteDTO> getClientes() {
+    return clienteRepository.findAll().stream().map(cliente -> ResponseClienteDTO.toDto(cliente)).toList(); 
   }
 
   public Cliente getClienteByCpf(Integer cpf) {
     return clienteRepository.findById(cpf).get();
   }
 
-  public Cliente atualizarCliente(Integer cpf, Cliente clienteAtualizado) {
+  public ResponseClienteDTO atualizarCliente(Integer cpf, Cliente clienteAtualizado) {
 
     Cliente cliente = getClienteByCpf(cpf);
 
@@ -38,9 +41,10 @@ public class ClienteService {
     cliente.setDataNascimento(clienteAtualizado.getDataNascimento());
     cliente.setSalario(clienteAtualizado.getSalario());
 
-    clienteRepository.save(cliente);
+    Cliente atualizado = clienteRepository.save(cliente);
 
-    return cliente;
+    return ResponseClienteDTO.toDto(atualizado);
+
   }
 
 }
