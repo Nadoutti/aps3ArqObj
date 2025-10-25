@@ -1,11 +1,11 @@
 package arqobj.aps3.ContaCorrente;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import arqobj.aps3.ContaCorrente.dto.ContaCorrenteResponseDTO;
 
 /**
  * ContaCorrenteService
@@ -16,13 +16,18 @@ public class ContaCorrenteService {
   @Autowired
   private ContaCorrenteRepository contaCorrenteRepository;
 
+  public ContaCorrenteResponseDTO getContaCorrenteDTO(Integer numeroConta) {
+    ContaCorrente conta = contaCorrenteRepository.getByNumero(numeroConta);
+    return ContaCorrenteResponseDTO.toDto(conta);
+  }
 
   public ContaCorrente getContaCorrente(Integer numeroConta) {
     return contaCorrenteRepository.getByNumero(numeroConta);
   }
 
-  public ContaCorrente criarContaCorrente(ContaCorrente conta) {
-    return contaCorrenteRepository.save(conta);
+  public ContaCorrenteResponseDTO criarContaCorrente(ContaCorrente conta) {
+    ContaCorrente contaCriada = contaCorrenteRepository.save(conta);
+    return ContaCorrenteResponseDTO.toDto(contaCriada);
   }
 
   public Float saque(Integer numeroConta, Float valor) {
@@ -63,7 +68,7 @@ public class ContaCorrenteService {
     return conta.listaMovimentacoes();
   }
 
-  public List<ContaCorrente> getContasCorrente() {
-    return contaCorrenteRepository.findAll();
+  public List<ContaCorrenteResponseDTO> getContasCorrente() {
+    return contaCorrenteRepository.findAll().stream().map(conta -> ContaCorrenteResponseDTO.toDto(conta)).toList();
   }
 }
