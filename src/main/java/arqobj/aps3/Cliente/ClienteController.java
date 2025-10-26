@@ -2,6 +2,7 @@ package arqobj.aps3.Cliente;
 
 import java.util.HashMap;
 import java.util.List;
+import arqobj.aps3.Cliente.dto.ResponseClienteDTO;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,22 +22,22 @@ public class ClienteController {
   private ClienteService clienteService;
 
   @PostMapping
-  public Cliente criarCliente(@RequestHeader(name = "token") String token, @RequestBody Cliente cliente) {
+  public ResponseClienteDTO criarCliente(@RequestHeader(name = "token") String token, @RequestBody Cliente cliente) {
     return clienteService.criarCliente(cliente);
   }
 
   @GetMapping
-  public List<Cliente> getClientes() {
+  public List<ResponseClienteDTO> getClientes() {
     return clienteService.getClientes();
   }
 
   @GetMapping("/{cpf}")
-  public Cliente getClienteByCpf(@PathVariable Integer cpf) {
+  public ResponseClienteDTO getClienteByCpf(@PathVariable Integer cpf) {
     return clienteService.getClientes().get(cpf);
   }
 
   @PutMapping("/atualizar/{cpf}")
-  public Cliente atualizarCliente(@RequestHeader(name = "token") String token, @PathVariable Integer cpf,
+  public ResponseClienteDTO atualizarCliente(@RequestHeader(name = "token") String token, @PathVariable Integer cpf,
       Cliente cliente) {
     return clienteService.atualizarCliente(cpf, cliente);
 
